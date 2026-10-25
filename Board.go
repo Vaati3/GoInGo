@@ -11,47 +11,50 @@ const Black rune = '⚫'
 const White rune = '⚪'
 
 type Board struct {
-	tiles [20][]rune
+	height, width int
+	tiles         [19][]rune
 }
 
 func (board *Board) Init() {
-	for i := range 20 {
+	board.height = 19
+	board.width = 19
+	for i := range board.height {
 		var line strings.Builder
-		if i > 0 {
-			if i < 10 {
-				line.WriteString(" ")
-			}
-			line.WriteString(strconv.Itoa(i))
-		} else {
-			line.WriteString("   ")
-		}
 
-		for j := range 19 {
-			if i < 1 {
-				line.WriteString(string(j+'A') + "  ")
-			} else {
-				line.WriteString(string(Empty))
-			}
+		for range board.width {
+			line.WriteRune(Empty)
 		}
 		board.tiles[i] = []rune(line.String())
 	}
 }
 
 func (board *Board) Print() {
-	for i := range board.tiles {
-		fmt.Println(string(board.tiles[i]))
+	var letters strings.Builder
+	letters.WriteString("   ")
+	for j := range board.width {
+		letters.WriteString(string(j+'A') + "  ")
+	}
+	fmt.Println(letters.String())
+	for i := range board.height {
+		var line strings.Builder
+		if i < 10 {
+			line.WriteString(" ")
+		}
+		line.WriteString(strconv.Itoa(i))
+		line.WriteString(string(board.tiles[i]))
+		fmt.Println(line.String())
 	}
 }
 
 func (board *Board) Move(x, y int, isWhite bool) bool {
-	if board.tiles[y+1][x+2] != Empty {
+	if board.tiles[y][x] != Empty {
 		return false
 	}
 
 	if isWhite {
-		board.tiles[y+1][x+2] = White
+		board.tiles[y][x] = White
 	} else {
-		board.tiles[y+1][x+2] = Black
+		board.tiles[y][x] = Black
 	}
 	board.Print()
 	return true
@@ -62,3 +65,8 @@ func (board *Board) IsGameOver() bool {
 
 	return false
 }
+
+/*func (board *Board) GetNeighbors(x, y int) []rune {
+	neighbors := []rune{}
+
+}*/
