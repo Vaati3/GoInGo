@@ -10,23 +10,31 @@ import (
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-	isWhite := true
+	isWhite := false
 	var board Board
 	board.Init()
 	board.Print()
+	fmt.Println("Select your move like that: B 4")
 
 	for {
 		if isWhite {
-			fmt.Print("White Turn (B 4):")
+			fmt.Print("White Turn:")
 		} else {
-			fmt.Print("Black Turn (B 4):")
+			fmt.Print("Black Turn:")
 		}
 		input, _ := reader.ReadString('\n')
 		b, x, y := CheckInput(input)
-		if b == false {
+		if b == false || !board.Move(x, y, isWhite) {
 			continue
 		}
-		board.Move(x, y, isWhite)
+		if board.IsGameOver() {
+			if isWhite {
+				fmt.Println("White Won")
+			} else {
+				fmt.Println("Black Black")
+			}
+			return
+		}
 		isWhite = !isWhite
 	}
 }

@@ -6,6 +6,10 @@ import (
 	"strings"
 )
 
+const Empty rune = '🟨'
+const Black rune = '⚫'
+const White rune = '⚪'
+
 type Board struct {
 	tiles [20][]rune
 }
@@ -19,14 +23,14 @@ func (board *Board) Init() {
 			}
 			line.WriteString(strconv.Itoa(i))
 		} else {
-			line.WriteString("  ")
+			line.WriteString("   ")
 		}
 
 		for j := range 19 {
 			if i < 1 {
-				line.WriteString(string(j + 'A'))
+				line.WriteString(string(j+'A') + "  ")
 			} else {
-				line.WriteString(".")
+				line.WriteString(string(Empty))
 			}
 		}
 		board.tiles[i] = []rune(line.String())
@@ -39,11 +43,22 @@ func (board *Board) Print() {
 	}
 }
 
-func (board *Board) Move(x, y int, isWhite bool) {
+func (board *Board) Move(x, y int, isWhite bool) bool {
+	if board.tiles[y+1][x+2] != Empty {
+		return false
+	}
+
 	if isWhite {
-		board.tiles[y+1][x+2] = '⏺'
+		board.tiles[y+1][x+2] = White
 	} else {
-		board.tiles[y+1][x+2] = '○'
+		board.tiles[y+1][x+2] = Black
 	}
 	board.Print()
+	return true
+}
+
+func (board *Board) IsGameOver() bool {
+	//TO DO
+
+	return false
 }
